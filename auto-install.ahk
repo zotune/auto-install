@@ -4,6 +4,7 @@
 #Include WatchFolder.ahk
 #Include FileGetVersionInfo_AW.ahk
 #Include Std.ahk
+#Include SetTaskbarProgress.ahk
 
 ;Config
 Folder:=ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path
@@ -13,6 +14,12 @@ RunAsAdmin()
 
 Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nFolder currently set to: '" Folder "'`n`n- Press SPACE to pause/resume`n- Press F5 to reload`n- Press F1 for help`n- Press F or D to open listening folder`n- Press S to open script folder`n- Press ESC to exit`n`n[=== LISTENING ===]")
 WatchFolder(Folder, "Detected", True, 0x01)
+
+Global ID
+WinGet, ID, IDLast , % "ahk_pid " GetCurrentProcess()
+
+SendMessage, WM_SETICON:=0x80, ICON_SMALL:=0, % LoadPicture(A_WorkingDir "\icon.ico", "Icon1", isIcon),, ahk_id %id%
+SendMessage, WM_SETICON:=0x80, ICON_BIG:=1, % LoadPicture(A_WorkingDir "\icon.ico", "Icon2", isIcon),, ahk_id %id%
 
 Detected(Directory, Changes) {
     For Each, Change In Changes {
@@ -25,11 +32,12 @@ Detected(Directory, Changes) {
             continue
         if ((Extension = "exe" or Extension = "msi") and (InStr(Name,"32bit") or InStr(Name,"32-bit") or InStr(Name,"keygen") or InStr(Name,"activate") or (InStr(Name,"x86") and !InStr(Name,"64"))))
             continue
-
+        SetTaskbarProgress("I",,ID)
         while IsLocked(Path)
             sleep, 500
         if (Extension = "exe"){
             Stdout("`n[=== """ Name """ ===]")
+            ; SetTaskbarProgress(50,,ID)
             Stdout("Scanning for silent install switches")
             ProductName := FileGetVersionInfo_AW(Path,"ProductName")
             if (InStr(ProductName,"NVIDIA Package")=1)
@@ -109,6 +117,7 @@ Detected(Directory, Changes) {
             ;     FileDelete, %FilePath%
             Stdout("[=== """ Name """ ===]")
         }
+        SetTaskbarProgress(0,"N",ID)
     }
 }
 
@@ -218,17 +227,17 @@ ExitApp
 Return
 
 SPACE::
-    spacePressCount++
-    if (Mod(spacePressCount, 2) != 0)
-    {
-        WatchFolder("**PAUSE", True)
-        Stdout("[=== LISTENING PAUSED ===]")
-    }
-    else
-    {
-        WatchFolder("**PAUSE", False)
-        Stdout("[=== LISTENING ===]")
-    }
+spacePressCount++
+if (Mod(spacePressCount, 2) != 0)
+{
+    WatchFolder("**PAUSE", True)
+    Stdout("[=== LISTENING PAUSED ===]")
+}
+else
+{
+    WatchFolder("**PAUSE", False)
+    Stdout("[=== LISTENING ===]")
+}
 return
 
 F::
