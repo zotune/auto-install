@@ -47,7 +47,7 @@ _protip: you can also save the `mklink` command in notepad and run it as a `.bat
 * [WatchFolder()](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=8384&hilit=watch) by **just me**
 * [FileGetVersionInfo_AW()](https://www.autohotkey.com/board/topic/59496-filegetversioninfo-aw/) by **SKAN**
 * [Stdout()](https://www.autohotkey.com/boards/viewtopic.php?style=7&t=56877) by **CyL0N**
-* [SetTaskbarProgress](https://www.autohotkey.com/board/topic/46860-windows-7-settaskbarprogress/page-2) by Lexikos and gwarble
+* [SetTaskbarProgress()](https://www.autohotkey.com/board/topic/46860-windows-7-settaskbarprogress/page-2) by Lexikos and gwarble
 
 _64-bit operating system and installers are prioritized. Not for Mac OS or Linux._
 
