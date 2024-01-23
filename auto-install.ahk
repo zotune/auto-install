@@ -214,15 +214,17 @@ MSIInfo(MSIFile, Type)
 
 #If WinActive("ahk_pid " GetCurrentProcess())
 F5::
+Critical
 Reload
+Return
+
+ESC::
+Critical
+ExitApp
 Return
 
 F1::
 Run, https://github.com/zotune/auto-install
-Return
-
-ESC::
-ExitApp
 Return
 
 SPACE::
