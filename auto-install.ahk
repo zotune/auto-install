@@ -15,7 +15,7 @@ Folder:=ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path
 
 RunAsAdmin()
 
-Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nFolder currently set to: '" Folder "'`n`n- Press SPACE to stop/start`n- Press F5 to reload`n- Press F1 for help`n- Press F or D to open listening folder`n- Press S to open script folder`n- Press ESC to exit`n`n[=== STARTED LISTENING ===]")
+Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nFolder currently set to: '" Folder "'`n`n- Press SPACE to pause/resume`n- Press F5 to reload`n- Press F1 for help`n- Press F or D to open listening folder`n- Press S to open script folder`n- Press ESC to exit`n`n[=== LISTENING ===]")
 WatchFolder(Folder, "Detected", True, 0x01)
 
 ; if !(A_IsCompiled)
@@ -235,12 +235,12 @@ SPACE::
     if (Mod(spacePressCount, 2) != 0)
     {
         WatchFolder("**PAUSE", True)
-        Stdout("[=== STOPPED LISTENING ===]")
+        Stdout("[=== LISTENING PAUSED ===]")
     }
     else
     {
         WatchFolder("**PAUSE", False)
-        Stdout("[=== STARTED LISTENING ===]")
+        Stdout("[=== LISTENING ===]")
     }
 return
 
