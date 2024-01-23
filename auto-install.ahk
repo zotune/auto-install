@@ -37,7 +37,6 @@ Detected(Directory, Changes) {
             sleep, 500
         if (Extension = "exe"){
             Stdout("`n[=== """ Name """ ===]")
-            ; SetTaskbarProgress(50,,ID)
             Stdout("Scanning for silent install switches")
             ProductName := FileGetVersionInfo_AW(Path,"ProductName")
             if (InStr(ProductName,"NVIDIA Package")=1)
