@@ -7,7 +7,7 @@
 
 ; TrayIconFile:="c:\Windows\System32\pifmgr.dll" ; set this to the file with the icon
 ; TrayIconNum:="-29" ; set to icon number within file - this is optional - if not set, it uses first icon in file - if negative, its absolute value is resource ID of icon in executable
-Menu,Tray,Icon,%A_ScriptDir%\icon.ico
+; Menu,Tray,Icon,%A_ScriptDir%\icon.ico
 
 ;Config
 Folder:=ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path
