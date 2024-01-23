@@ -1,8 +1,8 @@
 **Features:**
 * Listens for installers and archives to appear in **Downloads** folder (as well as any subfolders)
-* Automatically unpack `.zip`, `.rar`, `.7z` and `.iso` archives
-* Automatically silent install `.msi` installers (will also uninstall first)
-* Automatically detect and silent install `.exe` installers (currently supports [NSIS](https://nsis.sourceforge.io/Main_Page), [Inno Setup](https://jrsoftware.org/isinfo.php), [InstallAware](https://www.installaware.com/) and [InstallShield](https://www.revenera.com/install/products/installshield) installers)
+* Auto-unpack `.zip`, `.rar`, `.7z` and `.iso` archives
+* Auto-run `.msi` installers silently (will also uninstall first)
+* Auto-detect installer type and run `.exe` installers silently (currently supports [NSIS](https://nsis.sourceforge.io/Main_Page), [Inno Setup](https://jrsoftware.org/isinfo.php), [InstallAware](https://www.installaware.com/) and [InstallShield](https://www.revenera.com/install/products/installshield) installers)
 
 **How to use:**
 * Install [AutoHotkey v1.1.37.01](https://www.autohotkey.com/download/) using installer (v2 is not supported)
