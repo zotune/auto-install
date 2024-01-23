@@ -14,11 +14,11 @@
 
 e.g. `Bitwig Studio 5.1.2.msi` downloaded from the [Bitwig download page](https://www.bitwig.com/download/) using [Google Chrome](https://www.google.com/chrome/):
 
-<img width="225" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/53264396-6481-42be-9c0a-613d4fc28d4c">
+<img width="219" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/5c86f819-883a-4bc5-ba9b-09b22d75982d">
 
 ↓
 
-<img width="669" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/a8fbe2db-ef82-48ea-84fb-cbe7545988af">
+<img width="673" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/b42f1abc-91b1-44dd-bc1c-9fda650bc4cc">
 
 **Use-cases:**
 * Automatically unpack and install hardware drivers or software you download with your browser, e.g. Google Chrome (notably installers that are not yet available for package managers such as [WinGet](https://github.com/microsoft/winget-cli))
