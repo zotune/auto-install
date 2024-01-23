@@ -1,24 +1,17 @@
-Output(output:="", sciteCheck := true){	;output to console	-	sciteCheck reduces Stdout/Stdin performance,so where performance is necessary disable it accordingly
-	Global ___console___
-	If (sciteCheck && ProcessExist("SciTE.exe") && GetScriptParentProcess() = "SciTE.exe"){	;if script parent is scite,output to scite console & return
-		FileAppend, %output%`n, *
-		Return
-	}																												;CONOUT$ is a special file windows uses to expose attached console output
-	( output ? ( !___console___? (DllCall("AttachConsole", "int", -1) || DllCall("AllocConsole")) & (___console___:= true) : "" ) & FileAppend(output . "`n","CONOUT$") : DllCall("FreeConsole") & (___console___:= false) & StdExit() )
+StdOut(output){    
+    Global ___console___
+    ( output ? ( !___console___? (DllCall("AttachConsole", "int", -1) || DllCall("AllocConsole")) & (___console___:= true) : "" ) & FileAppend(output . "`n","CONOUT$") : DllCall("FreeConsole") & (___console___:= false) & StdExit() )
+    SetConsoleTitle(output)
 }
 
-Stdin(output:="", sciteCheck := true){	;output to console & wait for input & return input
+Stdin(output:=""){
 	Global ___console___
-	If (sciteCheck && ProcessExist("SciTE.exe") && GetScriptParentProcess() = "SciTE.exe"){	;if script parent is scite,output to scite console & return
-		FileAppend, %output%`n, *
-		Return
-	}
 	( output ? ( !___console___? (DllCall("AttachConsole", "int", -1) || DllCall("AllocConsole")) & (___console___:= true) : "" ) & FileAppend(output . "`n","CONOUT$") & (Stdin := FileReadLine("CONIN$",1)) : DllCall("FreeConsole") & (___console___:= false) & StdExit() )
 	Return Stdin
 }
 
 StdExit(){
-	If GetScriptParentProcess() = "cmd.exe"		;couldn't get this: 'DllCall("GenerateConsoleCtrlEvent", CTRL_C_EVENT, 0)' to work so...
+	If GetScriptParentProcess() = "cmd.exe"
 		ControlSend, , {Enter}, % "ahk_pid " . GetParentProcess(GetCurrentProcess())
 }
 
@@ -77,4 +70,8 @@ GetProcessName(PID)
 GetCurrentProcess()
 {
 	return DllCall("GetCurrentProcessId")
+}
+
+SetConsoleTitle(title) {
+    DllCall("SetConsoleTitle", "str", title)
 }
