@@ -1,5 +1,5 @@
 **Features:**
-* Listens for installers and archives to appear in **Downloads** folder (as well as any subfolders)
+* Listens for archives and installers to appear in **Downloads** folder (as well as any subfolders)
 * Auto-unpack `.zip`, `.rar`, `.7z` and `.iso` archives
 * Auto-run `.msi` installers silently (will also uninstall first)
 * Auto-detect installer type and run `.exe` installers silently (currently supports [NSIS](https://nsis.sourceforge.io/Main_Page), [Inno Setup](https://jrsoftware.org/isinfo.php), [InstallAware](https://www.installaware.com/) and [InstallShield](https://www.revenera.com/install/products/installshield) installers)
