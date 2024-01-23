@@ -5,10 +5,6 @@
 #Include FileGetVersionInfo_AW.ahk
 #Include Std.ahk
 
-; TrayIconFile:="c:\Windows\System32\pifmgr.dll" ; set this to the file with the icon
-; TrayIconNum:="-29" ; set to icon number within file - this is optional - if not set, it uses first icon in file - if negative, its absolute value is resource ID of icon in executable
-; Menu,Tray,Icon,%A_ScriptDir%\icon.ico
-
 ;Config
 Folder:=ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path
 ;Config end
@@ -18,10 +14,6 @@ RunAsAdmin()
 Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nFolder currently set to: '" Folder "'`n`n- Press SPACE to pause/resume`n- Press F5 to reload`n- Press F1 for help`n- Press F or D to open listening folder`n- Press S to open script folder`n- Press ESC to exit`n`n[=== LISTENING ===]")
 WatchFolder(Folder, "Detected", True, 0x01)
 
-; if !(A_IsCompiled)
-    ; Menu, Tray, Icon, %A_ScriptDir%\icon.ico, -159
-; if errorlevel
-;     Stdout("ERROR: Could not set icon to " A_ScriptDir "\icon.ico")
 Detected(Directory, Changes) {
     For Each, Change In Changes {
         Action := Change.Action
@@ -211,11 +203,6 @@ MSIInfo(MSIFile, Type)
 	objRelease(installer)
 	Return Type
 }
-
-; F5::
-; WinActivate, % "ahk_pid " GetCurrentProcess()
-; msgbox % GetCurrentProcess()
-; Return
 
 #If WinActive("ahk_pid " GetCurrentProcess())
 F5::
