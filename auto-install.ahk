@@ -1,19 +1,27 @@
 #Singleinstance, force
 #Persistent
+#NoTrayIcon
 #Include WatchFolder.ahk
 #Include FileGetVersionInfo_AW.ahk
 #Include Std.ahk
+
+; TrayIconFile:="c:\Windows\System32\pifmgr.dll" ; set this to the file with the icon
+; TrayIconNum:="-29" ; set to icon number within file - this is optional - if not set, it uses first icon in file - if negative, its absolute value is resource ID of icon in executable
+Menu,Tray,Icon,%A_ScriptDir%\icon.ico
 
 ;Config
 Folder:=ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path
 ;Config end
 
 RunAsAdmin()
-Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nListening for file changes in '" Folder "'")
+
+Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nFolder currently set to: '" Folder "'`n`n- Press SPACE to stop/start`n- Press F5 to reload`n- Press F1 for help`n- Press F or D to open listening folder`n- Press S to open script folder`n- Press ESC to exit`n`n[=== STARTED LISTENING ===]")
 WatchFolder(Folder, "Detected", True, 0x01)
 
-WinSetTitle, % "ahk_pid " . GetParentProcess(GetCurrentProcess()),, Bjarne
-
+; if !(A_IsCompiled)
+    ; Menu, Tray, Icon, %A_ScriptDir%\icon.ico, -159
+; if errorlevel
+;     Stdout("ERROR: Could not set icon to " A_ScriptDir "\icon.ico")
 Detected(Directory, Changes) {
     For Each, Change In Changes {
         Action := Change.Action
@@ -172,8 +180,8 @@ RunAsAdmin()
 }
 
 ExeInstallerIs(filePath){
-    RunWait, %comspec% /c strings2.exe "%filePath%" > string2.txt, % A_ScriptDir, Min
-    Loop, Read, %A_ScriptDir%\string2.txt
+    RunWait, %comspec% /c strings2.exe "%filePath%" > strings2.txt, % A_ScriptDir, Min
+    Loop, Read, %A_ScriptDir%\strings2.txt
     {
         if ((InStr(A_LoopReadLine,"nsis")=1) or (InStr(A_LoopReadLine,"nullsoft")=1))
             Return "/S" ;NSIS
@@ -203,3 +211,44 @@ MSIInfo(MSIFile, Type)
 	objRelease(installer)
 	Return Type
 }
+
+; F5::
+; WinActivate, % "ahk_pid " GetCurrentProcess()
+; msgbox % GetCurrentProcess()
+; Return
+
+#If WinActive("ahk_pid " GetCurrentProcess())
+F5::
+Reload
+Return
+
+F1::
+Run, https://github.com/zotune/auto-install
+Return
+
+ESC::
+ExitApp
+Return
+
+SPACE::
+    spacePressCount++
+    if (Mod(spacePressCount, 2) != 0)
+    {
+        WatchFolder("**PAUSE", True)
+        Stdout("[=== STOPPED LISTENING ===]")
+    }
+    else
+    {
+        WatchFolder("**PAUSE", False)
+        Stdout("[=== STARTED LISTENING ===]")
+    }
+return
+
+F::
+D::
+    Run, explorer.exe "%Folder%"
+return
+
+S::
+    Run, explorer.exe "%A_ScriptDir%"
+return
