@@ -9,7 +9,7 @@
 * Install [7-Zip 64-bit](https://www.7-zip.org/) using installer
 * Download and unpack [auto-install](https://codeload.github.com/zotune/auto-install/zip/refs/heads/main)
 * Run `auto-install.ahk` (it will run as admin)
-* Press `WIN+R`, and open folder `%UserProfile%\Downloads`
+* Open folder `%UserProfile%\Downloads`
 * Put installers/archives in the **Downloads** folder, they should automatically unpack and install
 
 e.g. `Bitwig Studio 5.1.2.msi` downloaded from the [Bitwig download page](https://www.bitwig.com/download/) using [Google Chrome](https://www.google.com/chrome/):
