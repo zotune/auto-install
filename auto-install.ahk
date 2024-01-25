@@ -1,16 +1,17 @@
 #Singleinstance, force
 #Persistent
 #NoTrayIcon
-#Include WatchFolder.ahk
-#Include FileGetVersionInfo_AW.ahk
-#Include Std.ahk
-#Include taskbarInterface.ahk
+#Include %A_ScriptDir%\WatchFolder.ahk
+#Include %A_ScriptDir%\FileGetVersionInfo_AW.ahk
+#Include %A_ScriptDir%\Std.ahk
+#Include %A_ScriptDir%\taskbarInterface.ahk
 
 ;Config
 Folder:=ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path
 ;Config end
 
 RunAsAdmin()
+ForCompile()
 
 Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nFolder currently set to: '" Folder "'`n`n- Press SPACE to pause/resume`n- Press F5 to reload`n- Press F1 for help`n- Press F or D to open listening folder`n- Press S to open script folder`n- Press ESC to exit`n`n[=== LISTENING ===]")
 WatchFolder(Folder, "Detected", True, 0x01)
@@ -224,6 +225,16 @@ MSIInfo(MSIFile, Type)
 	Type := record.StringData(1)
 	objRelease(installer)
 	Return Type
+}
+
+ForCompile()
+{
+    FileInstall, strings2.exe, strings2.exe
+    FileInstall, app.ico, app.ico
+    FileInstall, download.ico, download.ico
+    FileInstall, idle.ico, idle.ico
+    FileInstall, install.ico, install.ico
+    FileInstall, pause.ico, pause.ico
 }
 
 #If WinActive("ahk_pid " GetCurrentProcess())
