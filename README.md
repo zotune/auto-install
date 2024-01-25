@@ -58,7 +58,7 @@ _protip: this will have proper taskbar icon, you can pin it to taskbar, and you 
 ## How can I make it run during Windows startup?
 
 * Press `WIN+R` and navigate to `shell:startup`
-* Right-click drag `auto-install.ahk` or `auto-install.exe` into the startup folder.
+* Hold mouse right-click and drag `auto-install.ahk` or `auto-install.exe` into the startup folder.
 * Select `create shortcut here`
 
 _protip: simply remove this shortcut if you no longer wish to have it run during startup_
