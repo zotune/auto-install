@@ -1,10 +1,10 @@
-**Features:**
+# Features:
 * Listen for archives and installers to appear in **Downloads** folder (as well as any subfolders)
 * Auto-unpack `.zip`, `.rar`, `.7z` and `.iso` archives
 * Auto-run `.msi` installers silently (will also uninstall first)
 * Auto-detect installer type and run `.exe` installers silently (currently supports [NSIS](https://nsis.sourceforge.io/Main_Page), [Inno Setup](https://jrsoftware.org/isinfo.php), [InstallAware](https://www.installaware.com/) and [InstallShield](https://www.revenera.com/install/products/installshield) installers)
 
-**How to use:**
+# How to use:
 * Install [AutoHotkey v1.1.37.01](https://www.autohotkey.com/download/) using installer (v2 is not supported)
 * Install [7-Zip 64-bit](https://www.7-zip.org/) using installer
 * Download and unpack [auto-install](https://codeload.github.com/zotune/auto-install/zip/refs/heads/main)
@@ -20,20 +20,20 @@ e.g. `Bitwig Studio 5.1.2.msi` downloaded from the [Bitwig download page](https:
 
 <img width="673" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/b42f1abc-91b1-44dd-bc1c-9fda650bc4cc">
 
-**Use-cases:**
+# Use-cases:
 * Automatically unpack and install hardware drivers or software you download with your browser, e.g. Google Chrome (notably installers that are not yet available for package managers such as [WinGet](https://github.com/microsoft/winget-cli) or [Ninite](https://ninite.com))
 * Save all your drivers/software in a folder, and when reformatting Windows, copy/move them to **Downloads** folder to automatically unpack and install them all.
 
-**Troubleshooting:**
+# Troubleshooting:
 
-**I am out of disk space and I don't want to install to default installer folder:**
+## I am out of disk space and I don't want to install to default installer folder:
 
 * Run this in cmd/powershell: `mklink /j "<DefaultInstallerLocation>" "<DesiredLocation>"`
 * Then run the installer (or move it to **Downloads** folder to auto-install)
 
 e.g.: run `mklink /j "C:\Program Files\Bitwig Studio" "D:\Apps\Bitwig Studio"`
 
-**I installed to default installer folder, but now I want to move it to a different drive:**
+## I installed to default installer folder, but now I want to move it to a different drive:
 
 * Move the whole folder from `<AlreadyInstalledLocation>` to `<DesiredLocation>` (not the contents)
 * Run this in cmd/powershell: `mklink /j "<AlreadyInstalledLocation>" "<DesiredLocation>"`
@@ -42,11 +42,11 @@ e.g.: move `C:\Program Files\Bitwig Studio` folder to `D:\Apps\`, resulting in `
 
 _protip: you can also save the `mklink` command in notepad and run it as a `.bat` file_
 
-**One of the installers I tried did not run silently:**
+## One of the installers I tried did not run silently:
 
 Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters.
 
-**Uses the following binaries/modules:**
+### Uses the following binaries/modules:
 * [strings2](https://github.com/glmcdona/strings2/releases) by **Geoff McDonald**
 * [WatchFolder()](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=8384&hilit=watch) by **just me**
 * [FileGetVersionInfo_AW()](https://www.autohotkey.com/board/topic/59496-filegetversioninfo-aw/) by **SKAN**
