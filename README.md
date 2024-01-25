@@ -1,3 +1,6 @@
+
+<img width="96" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/21bac34d-255b-4f61-b969-c8062f65ba13">
+
 # Features
 * Listen for archives and installers to appear in **Downloads** folder (as well as any subfolders)
 * Auto-unpack `.zip`, `.rar`, `.7z` and `.iso` archives
@@ -18,7 +21,7 @@ e.g. `Bitwig Studio 5.1.2.msi` downloaded from the [Bitwig download page](https:
 
 ↓
 
-<img width="673" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/b42f1abc-91b1-44dd-bc1c-9fda650bc4cc">
+<img width="673" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/6b6b7b89-9637-4726-be81-faa59a2b858e">
 
 # Use-cases
 * Automatically unpack and install hardware drivers or software you download with your browser, e.g. Google Chrome (notably installers that are not yet available for package managers such as [WinGet](https://github.com/microsoft/winget-cli) or [Ninite](https://ninite.com))
@@ -45,6 +48,24 @@ _protip: you can also save the `mklink` command in notepad and run it as a `.bat
 ## One of the installers I tried did not run silently
 
 Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters. It usually contains words such as `NSIS`, `Inno Setup` etc which `auto-install` uses to determine which type of installer.
+
+## Is there a standalone binary `auto-install.exe` I can use?
+
+Yes. Simply run `compile.ahk` and `AutoHotkey.exe` should create one for you in the script folder
+
+_protip: this will have proper taskbar icon, you can pin it to taskbar, and you can pin it to the taskbar_
+
+## How can I make it run during Windows startup?
+
+* Press `WIN+R` and navigate to `shell:startup`
+* Right-click drag `auto-install.ahk` or `auto-install.exe` into the startup folder.
+* Select `create shortcut here`
+
+_protip: simply remove this shortcut if you no longer wish to have it run during startup_
+
+## Does the app leave any files when I uninstall?
+
+No. It's a portable app which only uses the script folder to generate things. If you delete the script folder, it is like the app never existed.
 
 ## I am afraid it will run everything that is already in my Downloads folder
 
