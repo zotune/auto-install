@@ -53,7 +53,7 @@ Create an [issue](https://github.com/zotune/auto-install/issues). Describe the p
 
 Yes. Simply run `auto-install.exe.ahk` and `AutoHotkey.exe` should create a standalone compiled version for you in the same folder
 
-_protip: this will have proper taskbar icon, you can pin it to taskbar, and you can pin it to the taskbar_
+_protip: this will have proper taskbar icon, and you can pin it to taskbar_
 
 ## How can I make it run during Windows startup?
 
