@@ -52,3 +52,6 @@ _protip: you can also save the `mklink` command in notepad and run it as a `.bat
 _64-bit operating system and installers are prioritized. Not for Mac OS or Linux._
 
 <a href="https://www.buymeacoffee.com/adore" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+**One of the installers I tried did not run silently:**
+Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters.
