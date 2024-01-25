@@ -11,7 +11,7 @@
 * Install [AutoHotkey v1.1.37.01](https://www.autohotkey.com/download/) using installer (v2 is not supported)
 * Install [7-Zip 64-bit](https://www.7-zip.org/) using installer
 * Download and unpack [auto-install](https://codeload.github.com/zotune/auto-install/zip/refs/heads/main)
-* Run `auto-install.ahk`, or run `auto-install.exe.ahk` and then `auto-install.exe`
+* Run `auto-install.ahk` (or run `auto-install.exe.ahk` and then `auto-install.exe`)
 * Open folder `%UserProfile%\Downloads`
 * Put installers/archives in the **Downloads** folder, they should automatically unpack and install
 
