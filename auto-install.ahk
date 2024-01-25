@@ -84,7 +84,6 @@ Detected(Directory, Changes) {
                 ; }
                 ; else
                 ;     Stdout("Did not find other versions of " NameWithoutVersion)
-
                 SilentArguments:=Trim(SilentArguments," ")
                 Stdout("Installing using """ Name """ " SilentArguments)
                 RunWait, "%Path%" %SilentArguments%,, Min
@@ -130,11 +129,9 @@ Detected(Directory, Changes) {
             ;     FileDelete, %FilePath%
             Stdout("[=== """ Name """ ===]")
         }
-        else
-            continue
-        tbi.setOverlayIcon(Idle)
-        tbi.SetProgressType("Off")
     }
+    tbi.setOverlayIcon(Idle)
+    tbi.SetProgressType("Off")
 }
 
 IsLocked(Path)
