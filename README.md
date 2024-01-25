@@ -12,7 +12,7 @@
 * Install [7-Zip 64-bit](https://www.7-zip.org/) using installer
 * Download and unpack [auto-install](https://codeload.github.com/zotune/auto-install/zip/refs/heads/main)
   * Run `auto-install.ahk` (it will run as admin)
-  * OR run `auto-install.exe.ahk`, which will generate a `auto-install.exe` that you can run.
+  * OR run `auto-install.exe.ahk`, which will compile a `auto-install.exe` in the same folder. Then run that.
 * Open folder `%UserProfile%\Downloads`
 * Put installers/archives in the **Downloads** folder, they should automatically unpack and install
 
