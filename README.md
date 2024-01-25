@@ -63,9 +63,9 @@ _protip: this will have proper taskbar icon, you can pin it to taskbar, and you 
 
 _protip: simply remove this shortcut if you no longer wish to have it run during startup_
 
-## Does the app leave any files when I uninstall?
+## Does the app leave any files when I remove it?
 
-No. It's a portable app which only uses the script folder to generate things. If you delete the script folder, it is like the app never existed.
+No. It's a portable app which only uses the script folder to generate things. Simply delete the script folder and it should be like the app never existed.
 
 ## I am afraid it will run everything that is already in my Downloads folder
 
