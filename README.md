@@ -1,7 +1,5 @@
 
-![app](https://github.com/zotune/auto-install/assets/13079592/4cf5a806-22fe-4bcf-bca2-7bb1a439b9ce)
-<img width="256" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/21bac34d-255b-4f61-b969-c8062f65ba13">
-
+<img width="128" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/21bac34d-255b-4f61-b969-c8062f65ba13">
 
 # Features
 * Listen for archives and installers to appear in **Downloads** folder (as well as any subfolders)
