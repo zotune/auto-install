@@ -65,7 +65,7 @@ _protip: simply remove this shortcut if you no longer wish to have it run during
 
 ## Does the app leave any files when I remove it?
 
-No. It's a portable app which only uses the script folder to generate things. Simply delete the script folder and it should be like the app never existed.
+No. It's a portable app which uses only the folder it is located in to generate things. Simply delete the script folder and it should be like the app never existed.
 
 ## I am afraid it will run everything that is already in my Downloads folder
 
