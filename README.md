@@ -69,7 +69,7 @@ No. It's a portable app which uses only the folder it is located in to generate 
 
 ## I am afraid it will run everything that is already in my Downloads folder
 
-It won't. `WatchFolder()` function only listens for changes (new files added to the **Downloads** folder or its subfolders)
+It won't. `WatchFolder()` function only listens for changes (new files added to the **Downloads** folder or its subfolders). In any case, if you ever need to kill the app, simply press `ESC` when it is open.
 
 ## Uses the following binaries/modules
 * [strings2](https://github.com/glmcdona/strings2/releases) by **Geoff McDonald**
