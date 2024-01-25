@@ -42,7 +42,11 @@ Detected(Directory, Changes) {
         if ((Extension = "exe" or Extension = "msi") and (InStr(Name,"32bit") or InStr(Name,"32-bit") or InStr(Name,"keygen") or InStr(Name,"activate") or (InStr(Name,"x86") and !InStr(Name,"64"))))
             continue
         while IsLocked(Path)
+        {
+            if (A_Index = 1)
+                tbi.setOverlayIcon(Download)
             sleep, 500
+        }
         tbi.SetProgressType("INDETERMINATE")
         tbi.setOverlayIcon(Install)
         if (Extension = "exe"){
@@ -126,6 +130,8 @@ Detected(Directory, Changes) {
             ;     FileDelete, %FilePath%
             Stdout("[=== """ Name """ ===]")
         }
+        else
+            continue
         tbi.setOverlayIcon(Idle)
         tbi.SetProgressType("Off")
     }
@@ -133,7 +139,6 @@ Detected(Directory, Changes) {
 
 IsLocked(Path)
 {
-    tbi.setOverlayIcon(Download)
     sleep, 500
     if (File := FileOpen(Path, "rw"))
         Return 0, File.Close() ;unlocked
