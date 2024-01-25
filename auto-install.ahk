@@ -4,7 +4,7 @@
 #Include WatchFolder.ahk
 #Include FileGetVersionInfo_AW.ahk
 #Include Std.ahk
-#Include SetTaskbarProgress.ahk
+#Include taskbarInterface.ahk
 
 ;Config
 Folder:=ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path
@@ -15,11 +15,21 @@ RunAsAdmin()
 Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nFolder currently set to: '" Folder "'`n`n- Press SPACE to pause/resume`n- Press F5 to reload`n- Press F1 for help`n- Press F or D to open listening folder`n- Press S to open script folder`n- Press ESC to exit`n`n[=== LISTENING ===]")
 WatchFolder(Folder, "Detected", True, 0x01)
 
-Global ID
-WinGet, ID, IDLast , % "ahk_pid " GetCurrentProcess()
 
-SendMessage, WM_SETICON:=0x80, ICON_SMALL:=0, % LoadPicture(A_WorkingDir "\icon.ico", "Icon1", isIcon),, ahk_id %id%
-SendMessage, WM_SETICON:=0x80, ICON_BIG:=1, % LoadPicture(A_WorkingDir "\icon.ico", "Icon2", isIcon),, ahk_id %id%
+Global tbi, Download, Idle, Install, Pause, Unpack
+WinGet, ID, IDLast , % "ahk_pid " GetCurrentProcess()
+tbi:= new taskbarInterface(ID)
+
+Icon := LoadPicture(A_WorkingDir "\install.ico", "Icon1", isIcon)
+tbi.setTaskBarIcon(Icon)
+
+Download := LoadPicture(A_WorkingDir "\download.ico", "Icon1", isIcon)
+Idle := LoadPicture(A_WorkingDir "\idle.ico", "Icon1", isIcon)
+Install := LoadPicture(A_WorkingDir "\install.ico", "Icon1", isIcon)
+Pause := LoadPicture(A_WorkingDir "\pause.ico", "Icon1", isIcon)
+Unpack := LoadPicture(A_WorkingDir "\unpack.ico", "Icon1", isIcon)
+tbi.setOverlayIcon(Idle)
+
 
 Detected(Directory, Changes) {
     For Each, Change In Changes {
@@ -32,10 +42,11 @@ Detected(Directory, Changes) {
             continue
         if ((Extension = "exe" or Extension = "msi") and (InStr(Name,"32bit") or InStr(Name,"32-bit") or InStr(Name,"keygen") or InStr(Name,"activate") or (InStr(Name,"x86") and !InStr(Name,"64"))))
             continue
-        SetTaskbarProgress("I",,ID)
         while IsLocked(Path)
             sleep, 500
+        tbi.SetProgressType("INDETERMINATE")
         if (Extension = "exe"){
+            tbi.setOverlayIcon(Install)
             Stdout("`n[=== """ Name """ ===]")
             Stdout("Scanning for silent install switches")
             ProductName := FileGetVersionInfo_AW(Path,"ProductName")
@@ -81,6 +92,7 @@ Detected(Directory, Changes) {
             Stdout("[=== """ Name """ ===]")
         }
         else if (Extension = "msi"){
+            tbi.setOverlayIcon(Install)
             if FileExist(Dir "\" OutNameNoExt ".exe")
                 continue
             Stdout("`n[=== """ Name """ ===]")
@@ -101,6 +113,7 @@ Detected(Directory, Changes) {
         }
         else if (Extension = "rar") or (Extension = "zip") or (Extension = "7z") or (Extension = "iso")
         {
+            tbi.setOverlayIcon(Unpack)
             Stdout("`n[=== """ Name """ ===]")
             7zipPath=%ProgramFiles%\7-Zip\7z.exe
             if !FileExist(7zipPath)
@@ -116,12 +129,14 @@ Detected(Directory, Changes) {
             ;     FileDelete, %FilePath%
             Stdout("[=== """ Name """ ===]")
         }
-        SetTaskbarProgress(0,"N",ID)
+        tbi.setOverlayIcon(Idle)
+        tbi.SetProgressType("Off")
     }
 }
 
 IsLocked(Path)
 {
+    tbi.setOverlayIcon(Download)
     sleep, 500
     if (File := FileOpen(Path, "rw"))
         Return 0, File.Close() ;unlocked
@@ -231,11 +246,13 @@ SPACE::
 spacePressCount++
 if (Mod(spacePressCount, 2) != 0)
 {
+    tbi.setOverlayIcon(Pause)
     WatchFolder("**PAUSE", True)
     Stdout("[=== LISTENING PAUSED ===]")
 }
 else
 {
+    tbi.setOverlayIcon(Idle)
     WatchFolder("**PAUSE", False)
     Stdout("[=== LISTENING ===]")
 }
