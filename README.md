@@ -42,6 +42,9 @@ e.g.: move `C:\Program Files\Bitwig Studio` folder to `D:\Apps\`, resulting in `
 
 _protip: you can also save the `mklink` command in notepad and run it as a `.bat` file_
 
+**One of the installers I tried did not run silently:**
+Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters.
+
 **Uses the following binaries/modules:**
 * [strings2](https://github.com/glmcdona/strings2/releases) by **Geoff McDonald**
 * [WatchFolder()](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=8384&hilit=watch) by **just me**
@@ -52,6 +55,3 @@ _protip: you can also save the `mklink` command in notepad and run it as a `.bat
 _64-bit operating system and installers are prioritized. Not for Mac OS or Linux._
 
 <a href="https://www.buymeacoffee.com/adore" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-
-**One of the installers I tried did not run silently:**
-Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters.
