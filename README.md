@@ -1,5 +1,5 @@
 
-<img width="64" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/21bac34d-255b-4f61-b969-c8062f65ba13">
+<img width="96" alt="image" src="https://github.com/zotune/auto-install/assets/13079592/21bac34d-255b-4f61-b969-c8062f65ba13">
 
 # Features
 * Listen for archives and installers to appear in **Downloads** folder (as well as any subfolders)
