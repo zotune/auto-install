@@ -46,6 +46,10 @@ _protip: you can also save the `mklink` command in notepad and run it as a `.bat
 
 Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters.
 
+## I am afraid it will run everything thats already in my Downloads folder
+
+It won't. `WatchFolder()` function only listens for changes (new files added to the **Downloads** folder or its subfolders)
+
 ## Uses the following binaries/modules
 * [strings2](https://github.com/glmcdona/strings2/releases) by **Geoff McDonald**
 * [WatchFolder()](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=8384&hilit=watch) by **just me**
