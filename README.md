@@ -43,6 +43,7 @@ e.g.: move `C:\Program Files\Bitwig Studio` folder to `D:\Apps\`, resulting in `
 _protip: you can also save the `mklink` command in notepad and run it as a `.bat` file_
 
 **One of the installers I tried did not run silently:**
+
 Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters.
 
 **Uses the following binaries/modules:**
