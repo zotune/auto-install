@@ -55,7 +55,7 @@ It won't. `WatchFolder()` function only listens for changes (new files added to 
 * [WatchFolder()](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=8384&hilit=watch) by **just me**
 * [FileGetVersionInfo_AW()](https://www.autohotkey.com/board/topic/59496-filegetversioninfo-aw/) by **SKAN**
 * [Stdout()](https://www.autohotkey.com/boards/viewtopic.php?style=7&t=56877) by **CyL0N**
-* [SetTaskbarProgress()](https://www.autohotkey.com/board/topic/46860-windows-7-settaskbarprogress/page-2) by Lexikos and gwarble
+* [taskbarInterface{}]([https://www.autohotkey.com/board/topic/46860-windows-7-settaskbarprogress/page-2](https://github.com/HelgeffegleH/taskbarInterface)) by **HelgeffegleH**
 
 _64-bit operating system and installers are prioritized. Not for Mac OS or Linux._
 
