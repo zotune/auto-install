@@ -16,18 +16,17 @@ Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/
 WatchFolder(Folder, "Detected", True, 0x01)
 
 
-Global tbi, Download, Idle, Install, Pause, Unpack
+Global tbi, Download, Idle, Install, Pause
 WinGet, ID, IDLast , % "ahk_pid " GetCurrentProcess()
 tbi:= new taskbarInterface(ID)
 
-Icon := LoadPicture(A_WorkingDir "\install.ico", "Icon1", isIcon)
+Icon := LoadPicture(A_WorkingDir "\app.ico", "Icon1", isIcon)
 tbi.setTaskBarIcon(Icon)
 
 Download := LoadPicture(A_WorkingDir "\download.ico", "Icon1", isIcon)
 Idle := LoadPicture(A_WorkingDir "\idle.ico", "Icon1", isIcon)
-Install := LoadPicture(A_WorkingDir "\install.ico", "Icon1", isIcon)
 Pause := LoadPicture(A_WorkingDir "\pause.ico", "Icon1", isIcon)
-Unpack := LoadPicture(A_WorkingDir "\unpack.ico", "Icon1", isIcon)
+Install := LoadPicture(A_WorkingDir "\install.ico", "Icon1", isIcon)
 tbi.setOverlayIcon(Idle)
 
 
@@ -45,8 +44,8 @@ Detected(Directory, Changes) {
         while IsLocked(Path)
             sleep, 500
         tbi.SetProgressType("INDETERMINATE")
+        tbi.setOverlayIcon(Install)
         if (Extension = "exe"){
-            tbi.setOverlayIcon(Install)
             Stdout("`n[=== """ Name """ ===]")
             Stdout("Scanning for silent install switches")
             ProductName := FileGetVersionInfo_AW(Path,"ProductName")
@@ -92,7 +91,6 @@ Detected(Directory, Changes) {
             Stdout("[=== """ Name """ ===]")
         }
         else if (Extension = "msi"){
-            tbi.setOverlayIcon(Install)
             if FileExist(Dir "\" OutNameNoExt ".exe")
                 continue
             Stdout("`n[=== """ Name """ ===]")
@@ -113,7 +111,6 @@ Detected(Directory, Changes) {
         }
         else if (Extension = "rar") or (Extension = "zip") or (Extension = "7z") or (Extension = "iso")
         {
-            tbi.setOverlayIcon(Unpack)
             Stdout("`n[=== """ Name """ ===]")
             7zipPath=%ProgramFiles%\7-Zip\7z.exe
             if !FileExist(7zipPath)
