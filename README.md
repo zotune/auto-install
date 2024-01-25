@@ -49,6 +49,24 @@ _protip: you can also save the `mklink` command in notepad and run it as a `.bat
 
 Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters. It usually contains words such as `NSIS`, `Inno Setup` etc which `auto-install` uses to determine which type of installer.
 
+## Is there a standalone binary `auto-install.exe` I can use?
+
+Yes. Simply run `compile.ahk` and `AutoHotkey.exe` should create one for you in the script folder
+
+_protip: this will have proper taskbar icon, you can pin it to taskbar, and you can pin it to the taskbar_
+
+## How can I make it run during Windows startup?
+
+* Press `WIN+R` and navigate to `shell:startup`
+* Right-click drag `auto-install.ahk` or `auto-install.exe` into the startup folder.
+* Select `create shortcut here`
+
+_protip: simply remove this shortcut if you no longer wish to have it run during startup_
+
+## Does the app leave any files when I uninstall?
+
+No. It's a portable app which only uses the script folder to generate things. If you delete the script folder, it is like the app never existed.
+
 ## I am afraid it will run everything that is already in my Downloads folder
 
 It won't. `WatchFolder()` function only listens for changes (new files added to the **Downloads** folder or its subfolders)
