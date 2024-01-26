@@ -25,7 +25,7 @@ e.g. `Bitwig Studio 5.1.2.msi` downloaded from the [Bitwig download page](https:
 
 # Use-cases
 * Automatically unpack and install hardware drivers or software you download with your browser, e.g. Google Chrome (notably installers that are not yet available for package managers such as [WinGet](https://github.com/microsoft/winget-cli) or [Ninite](https://ninite.com))
-* Save all your drivers/software in a folder, and when reformatting Windows, copy/move them to **Downloads** folder to automatically unpack and install them all.
+* Save all your drivers/software in a folder, and when reinstalling Windows, copy/move them to **Downloads** folder to automatically unpack and install them all.
 
 # Troubleshooting
 
