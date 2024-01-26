@@ -27,7 +27,7 @@ e.g. `Bitwig Studio 5.1.2.msi` downloaded from the [Bitwig download page](https:
 * Automatically unpack and install hardware drivers or software you download with your browser, e.g. Google Chrome (notably installers that are not yet available for package managers such as [WinGet](https://github.com/microsoft/winget-cli) or [Ninite](https://ninite.com))
 * Save all your drivers/software in a folder, and when reinstalling Windows, copy/move them to **Downloads** folder to automatically unpack and install them all.
 
-_protip: most app save their settings in folders `%AppData%`, `%LocalAppData%`, `%ProgramData%` or windows registry `regedit`, so if you backup those, you might be able to automatically restore your settings too when reinstalling windows. more on this [here](https://www.reddit.com/r/software/comments/3g4slg/before_upgrading_windows_using_a_clean_install/)_
+_protip: most apps save their settings in folders `%AppData%`, `%LocalAppData%`, `%ProgramData%` or windows registry paths such as `Computer\HKEY_CURRENT_USER\SOFTWARE`. if you backup these, you will probably be able to automatically restore your settings after reinstalling windows, instead of having to set them again one by one manually. more on this [here](https://www.reddit.com/r/software/comments/3g4slg/before_upgrading_windows_using_a_clean_install/)_
 
 # Troubleshooting
 
