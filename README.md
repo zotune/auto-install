@@ -51,9 +51,9 @@ Create an [issue](https://github.com/zotune/auto-install/issues). Describe the p
 
 ## Is there a standalone binary `auto-install.exe` I can use?
 
-Yes. Simply run `auto-install.exe.ahk` and `AutoHotkey.exe` should create a standalone compiled version for you in the same folder
+Yes. Simply run `auto-install.exe.ahk` and `AutoHotkey` should create a standalone compiled version for you in the same folder
 
-_protip: this will have proper taskbar icon, and you can pin it to taskbar_
+_protip: this will have proper taskbar icon, and you can pin it to the taskbar_
 
 ## How can I make it run during Windows startup?
 
