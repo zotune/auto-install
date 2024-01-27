@@ -57,14 +57,6 @@ Yes. Simply run `auto-install.exe.ahk` and `AutoHotkey` should create a standalo
 
 _protip: this will have proper taskbar icon, and you can pin it to the taskbar_
 
-## How can I make it run during Windows startup?
-
-* Press `WIN+R` and navigate to `shell:startup`
-* Hold mouse right-click and drag `auto-install.ahk` or `auto-install.exe` into the startup folder.
-* Select `create shortcut here`
-
-_protip: simply remove this shortcut if you no longer wish to have it run during startup_
-
 ## Does the app leave any files when I remove it?
 
 No. It's a portable app which uses only the folder it is located in to generate things. Simply delete the script folder and it should be like the app never existed.
