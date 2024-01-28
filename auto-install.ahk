@@ -14,8 +14,9 @@ RunAsAdmin()
 ForCompile()
 
 Stdout("Auto-install by Mikael Ellingsen (zotune@gmail.com)`nhttps://github.com/zotune/auto-install`nFolder currently set to: '" Folder "'`n`n- Press SPACE to pause/resume`n- Press F5 to reload`n- Press F1 for help`n- Press F or D to open listening folder`n- Press S to open script folder`n- Press ESC to exit`n`n[=== LISTENING ===]")
-WatchFolder(Folder, "Detected", True, 0x01)
-
+WatchFolder(Folder, "DetectFile", True, 0x01)
+; EnvGet, ProgramFilesX86, ProgramFiles(x86)
+; WatchFolder(ProgramFiles, "DetectFolder", False, 0x16), WatchFolder(ProgramFilesX86, "DetectFolder", False, 0x16)
 
 Global tbi, Download, Idle, Install, Pause
 WinGet, ID, IDLast , % "ahk_pid " GetCurrentProcess()
@@ -30,8 +31,23 @@ Pause := LoadPicture(A_WorkingDir "\pause.ico", "Icon1", isIcon)
 Install := LoadPicture(A_WorkingDir "\install.ico", "Icon1", isIcon)
 tbi.setOverlayIcon(Idle)
 
+; DetectFolder(Directory, Changes) {
+;     global prevPath
+;     For Each, Change In Changes {
+;         Action := Change.Action
+;         Path := Change.Name
+;         if (Path = prevPath)
+;             continue
+;         prevPath := Path
+;         if (Action = 3)
+;         {
+;             Stdout("New app found in: " Path)
+;         }
+;     }
+; }
 
-Detected(Directory, Changes) {
+
+DetectFile(Directory, Changes) {
     For Each, Change In Changes {
         Action := Change.Action
         Path := Change.Name
@@ -58,19 +74,20 @@ Detected(Directory, Changes) {
                 SilentArguments := "-s"
             else
                 SilentArguments := ExeInstallerIs(Path)
-            if (SilentArguments = "")
-            {
-                Run, "%Path%" /?,, Min
-                WinWait, ahk_exe %Name%
-                WinGetText, Text, ahk_exe %Name%
-                WinClose, ahk_exe %Name%
-                Parameters := ["/INSTALL","/SILENT","/QUIET","/NORESTART","/SUPPRESSMSGBOXES"]
-                for a, Parameter in Parameters
-                {
-                    if InStr(Text, Parameter)
-                        SilentArguments .= " " Parameter
-                }
-            }
+            ; Commented out auto detect silent install switches (required for installers where info is only available in /? help)
+            ; if (SilentArguments = "")
+            ; {
+            ;     Run, "%Path%" /?,, Min
+            ;     WinWait, ahk_exe %Name%
+            ;     WinGetText, Text, ahk_exe %Name%
+            ;     WinClose, ahk_exe %Name%
+            ;     Parameters := ["/INSTALL","/SILENT","/QUIET","/NORESTART","/SUPPRESSMSGBOXES"]
+            ;     for a, Parameter in Parameters
+            ;     {
+            ;         if InStr(Text, Parameter)
+            ;             SilentArguments .= " " Parameter
+            ;     }
+            ; }
             if (SilentArguments != "")
             {
                 NameWithoutVersion := NameWithoutVersion(ProductName)
