@@ -69,6 +69,7 @@ DetectFile(Directory, Changes) {
         if (Extension = "exe"){
             Stdout("`n[=== """ Name """ ===]")
             Stdout("Scanning for silent install switches")
+            RunWait, CertUtil -hashfile "%Path%" SHA256
             ProductName := FileGetVersionInfo_AW(Path,"ProductName")
             if (InStr(ProductName,"NVIDIA Package")=1)
                 SilentArguments := "-s"
