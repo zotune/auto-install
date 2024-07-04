@@ -8,7 +8,7 @@
 * Auto-detect installer type and run `.exe` installers silently (currently supports [NSIS](https://nsis.sourceforge.io/Main_Page), [Inno Setup](https://jrsoftware.org/isinfo.php), [InstallAware](https://www.installaware.com/) and [InstallShield](https://www.revenera.com/install/products/installshield) installers)
 
 # How to use
-* Install [AutoHotkey v1.1.37.01](https://www.autohotkey.com/download/) using installer (v2 is not supported)
+* Install latest [AutoHotkey 1.1.x.x_setup.exe](https://www.autohotkey.com/download/1.1/?C=M;O=D) using installer (v2 is not supported)
 * Install [7-Zip 64-bit](https://www.7-zip.org/) using installer
 * Download and unpack [auto-install](https://codeload.github.com/zotune/auto-install/zip/refs/heads/main)
 * Run `auto-install.ahk` (or run `auto-install.exe.ahk` and then `auto-install.exe`)
