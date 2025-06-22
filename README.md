@@ -69,9 +69,9 @@ It won't. `WatchFolder()` function only listens for changes (new files added to 
 
 Yes — all source code is available [here on GitHub](https://github.com/zotune/auto-install). There’s no hidden behavior. However, note that the app will run any installer you drop into your Downloads folder, so be cautious about what executables you use. Always verify the source.
 
-## Can I choose to only install `.aax` or `.vst`?
+## Can I choose to only install only certain options for the installers, such as `.aax` or `.vst` for music plugins?
 
-Not directly. Installers don't typically offer a flag to select only specific plugin formats. Since `.aax`, `.vst3`, etc. don't take much space, the easiest method is:
+Not directly. Installers don't typically offer a flags for all the options. For music plugins, `.aax`, `.vst3`, etc. don't take much space, but you can do the following:
 
 1. Install everything
 2. Use [Everything](https://www.voidtools.com/) or similar to search for `.aaxplugin`, `.clap`, `.vst3`
