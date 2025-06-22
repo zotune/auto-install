@@ -65,6 +65,35 @@ No. It's a portable app which uses only the folder it is located in to generate 
 
 It won't. `WatchFolder()` function only listens for changes (new files added to the **Downloads** folder or its subfolders). In any case, if you ever need to kill the app, simply press `ESC` when it is open.
 
+## Is it safe?
+
+Yes — all source code is available [here on GitHub](https://github.com/zotune/auto-install). There’s no hidden behavior. However, note that the app will run any installer you drop into your Downloads folder, so be cautious about what executables you use. Always verify the source.
+
+## Can I choose to only install `.aax` or `.vst`?
+
+Not directly. Installers don't typically offer a flag to select only specific plugin formats. Since `.aax`, `.vst3`, etc. don't take much space, the easiest method is:
+
+1. Install everything
+2. Use [Everything](https://www.voidtools.com/) or similar to search for `.aaxplugin`, `.clap`, `.vst3`
+3. Manually delete what you don’t need — **after verifying the plugins still work**
+
+---
+
+## Can I use a folder other than `Downloads`?
+
+Yes. Modify this line in `auto-install.ahk`:
+
+`Folder := ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path` to something like `Folder := "D:\Temp"`
+
+## It does not work?
+
+1. Ensure you are using AutoHotkey v1.1 (not v2) and follow the instructions carefully.
+2. Ensure you copy or download the installersr into the folder **while** `auto-install.ahk` is still running. It will not work if the installers are already present in the folder when you start `auto-install.ahk`
+
+The installer wasn’t already present in the folder before you started the script
+
+`Folder := ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path` to something like `Folder := "D:\Temp"`
+
 ## Uses the following binaries/modules
 * [strings2](https://github.com/glmcdona/strings2/releases) by **Geoff McDonald**
 * [WatchFolder()](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=8384&hilit=watch) by **just me**
