@@ -73,11 +73,8 @@ Yes — all source code is available [here on GitHub](https://github.com/zotune/
 
 Not directly. Installers don't typically offer a flags for all the options. For music plugins, `.aax`, `.vst3`, etc. don't take much space, but you can do the following:
 
-1. Install everything
-2. Use [Everything](https://www.voidtools.com/) or similar to search for `.aaxplugin`, `.clap`, `.vst3`
-3. Manually delete what you don’t need — **after verifying the plugins still work**
-
----
+1. Install and use [Everything](https://www.voidtools.com/) or similar to search for `.aaxplugin`, `.clap`, `.vst3`
+2. Recycle what you don’t need, verify that your plugins still work then delete them permanently.
 
 ## Can I use a folder other than `Downloads`?
 
