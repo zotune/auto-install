@@ -90,10 +90,6 @@ Yes. Modify this line in `auto-install.ahk`:
 1. Ensure you are using AutoHotkey v1.1 (not v2) and follow the instructions carefully.
 2. Ensure you copy or download the installersr into the folder **while** `auto-install.ahk` is still running. It will not work if the installers are already present in the folder when you start `auto-install.ahk`
 
-The installer wasn’t already present in the folder before you started the script
-
-`Folder := ComObjCreate("Shell.Application").NameSpace("shell:downloads").self.path` to something like `Folder := "D:\Temp"`
-
 ## Uses the following binaries/modules
 * [strings2](https://github.com/glmcdona/strings2/releases) by **Geoff McDonald**
 * [WatchFolder()](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=8384&hilit=watch) by **just me**
