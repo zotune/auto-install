@@ -69,7 +69,8 @@ DetectFile(Directory, Changes) {
         if (Extension = "exe"){
             Stdout("`n[=== """ Name """ ===]")
             Stdout("Scanning for silent install switches")
-            RunWait, CertUtil -hashfile "%Path%" SHA256
+            if ShouldHashFile(Path)
+                RunWait, CertUtil -hashfile "%Path%" SHA256
             ProductName := FileGetVersionInfo_AW(Path,"ProductName")
             if (InStr(ProductName,"NVIDIA Package")=1)
                 SilentArguments := "-s"
@@ -162,6 +163,14 @@ IsLocked(Path)
         Return 1 ;locked
 }
 
+ShouldHashFile(Path)
+{
+    FileGetSize, SizeBytes, %Path%
+    if ErrorLevel
+        return false
+    return SizeBytes <= 104857600 ; 100 MB
+}
+
 NameWithoutVersion(Name)
 {
     return Trim(RegExReplace(Name, "\d+\.?\s*")," ")
@@ -213,22 +222,35 @@ RunAsAdmin()
 }
 
 ExeInstallerIs(filePath){
-    RunWait, %comspec% /c strings2.exe "%filePath%" > strings2.txt, % A_ScriptDir, Min
-    Loop, Read, %A_ScriptDir%\strings2.txt
+    shell := ComObjCreate("WScript.Shell")
+    exec := shell.Exec("""" A_ScriptDir "\strings2.exe"" """ filePath """")
+    while !exec.StdOut.AtEndOfStream
     {
-        if ((InStr(A_LoopReadLine,"nsis")=1) or (InStr(A_LoopReadLine,"nullsoft")=1))
-            Return "/S" ;NSIS
-        else if ((InStr(A_LoopReadLine,"inno")=1) and !(InStr(A_LoopReadLine,"< window")=1))
-            Return "/TYPE=FULL /VERYSILENT /SUPPRESSMSGBOXES /NORESTART" ;InnoSetup
-        else if (InStr(A_LoopReadLine,"InstallAware")=1)
-            Return "/s" ;InstallAware
-        else if (InStr(A_LoopReadLine,"installshield")=1)
-            Return "/s" ;InstallShield
-        else if (InStr(A_LoopReadLine,"7-Zip 7zS.sfx.exe")=1)
-            Return "-gm2" ;Gnu SelfExtracting 7z Archive
-        else if (InStr(A_LoopReadLine,"RarSfx WinRAR")=1)
-            Return "-s" ;WinRAR Self Extracting Archive
+        silentArguments := SilentArgumentsFromLine(exec.StdOut.ReadLine())
+        if (silentArguments != "")
+        {
+            exec.Terminate()
+            return silentArguments
+        }
     }
+    return ""
+}
+
+SilentArgumentsFromLine(line)
+{
+    if ((InStr(line,"nsis")=1) or (InStr(line,"nullsoft")=1))
+        Return "/S" ;NSIS
+    else if ((InStr(line,"inno")=1) and !(InStr(line,"< window")=1))
+        Return "/TYPE=FULL /VERYSILENT /SUPPRESSMSGBOXES /NORESTART" ;InnoSetup
+    else if (InStr(line,"InstallAware")=1)
+        Return "/s" ;InstallAware
+    else if (InStr(line,"installshield")=1)
+        Return "/s" ;InstallShield
+    else if (InStr(line,"7-Zip 7zS.sfx.exe")=1)
+        Return "-gm2" ;Gnu SelfExtracting 7z Archive
+    else if (InStr(line,"RarSfx WinRAR")=1)
+        Return "-s" ;WinRAR Self Extracting Archive
+    return ""
 }
 
 MSIInfo(MSIFile, Type)

@@ -49,7 +49,7 @@ _protip: you can also save the `mklink` command in notepad and run it as a `.bat
 
 ## One of the installers I tried did not run silently
 
-Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and be sure to include `strings2.txt` which should have been created next to `auto-install.ahk` when it scanned for silent install parameters. It usually contains words such as `NSIS`, `Inno Setup` etc which `auto-install` uses to determine which type of installer.
+Create an [issue](https://github.com/zotune/auto-install/issues). Describe the problem and include the installer filename. If needed, run `strings2.exe <installer.exe>` manually from the script folder and include the output. It usually contains words such as `NSIS`, `Inno Setup` etc which `auto-install` uses to determine which type of installer.
 
 ## Is there a standalone binary `auto-install.exe` I can use?
 
