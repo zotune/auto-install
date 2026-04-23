@@ -1,0 +1,40 @@
+name: Build EXE
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install AutoHotkey v1
+        shell: powershell
+        run: |
+          $installer = 'AutoHotkey_1.1.37.02_setup.exe'
+          $url = 'https://github.com/AutoHotkey/AutoHotkey/releases/download/v1.1.37.02/AutoHotkey_1.1.37.02_setup.exe'
+          Invoke-WebRequest -Uri $url -OutFile $installer
+          Start-Process -FilePath ".\$installer" -ArgumentList '/S', '/U64' -Wait
+
+      - name: Compile auto-install.exe
+        shell: powershell
+        run: |
+          $compiler = Join-Path $env:ProgramFiles 'AutoHotkey\Compiler\Ahk2Exe.exe'
+          if (!(Test-Path $compiler)) {
+            $compiler = Join-Path ${env:ProgramFiles(x86)} 'AutoHotkey\Compiler\Ahk2Exe.exe'
+          }
+          if (!(Test-Path $compiler)) {
+            throw 'Ahk2Exe.exe not found after AutoHotkey installation.'
+          }
+          & $compiler /in auto-install.ahk /icon app.ico
+
+      - name: Upload auto-install.exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: auto-install-exe
+          path: auto-install.exe
+          retention-days: 7
