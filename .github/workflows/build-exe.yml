@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -32,9 +35,30 @@ jobs:
           }
           & $compiler /in auto-install.ahk /icon app.ico
 
+      - name: Compute release name
+        if: github.ref == 'refs/heads/main'
+        shell: powershell
+        run: |
+          $date = Get-Date -Format 'yyyy-MM-dd'
+          Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_TAG=build-$date"
+          Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_NAME=Build $date"
+
       - name: Upload auto-install.exe
         uses: actions/upload-artifact@v4
         with:
           name: auto-install-exe
           path: auto-install.exe
           retention-days: 7
+
+      - name: Publish to GitHub Releases
+        if: github.ref == 'refs/heads/main'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view $env:RELEASE_TAG *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $env:RELEASE_TAG auto-install.exe --clobber
+          } else {
+            gh release create $env:RELEASE_TAG auto-install.exe --title $env:RELEASE_NAME --notes "Automated build for $env:GITHUB_SHA" --prerelease --latest=false --target $env:GITHUB_SHA
+          }
