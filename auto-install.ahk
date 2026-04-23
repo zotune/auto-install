@@ -452,10 +452,10 @@ StopStrings2(pid)
 
 SilentArgumentsFromLine(line)
 {
-    if ((InStr(line,"nsis")=1) or (InStr(line,"nullsoft")=1))
-        Return "/S" ;NSIS
-    else if ((InStr(line,"inno")=1) and !(InStr(line,"< window")=1))
+    if ((InStr(line,"inno")=1) and !(InStr(line,"< window")=1))
         Return "/TYPE=FULL /VERYSILENT /SUPPRESSMSGBOXES /NORESTART" ;InnoSetup
+    else if ((InStr(line,"nsis")=1) or (InStr(line,"nullsoft")=1))
+        Return "/S" ;NSIS
     else if (InStr(line,"InstallAware")=1)
         Return "/s" ;InstallAware
     else if (InStr(line,"installshield")=1)
