@@ -56,8 +56,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release view $env:RELEASE_TAG *> $null
-          if ($LASTEXITCODE -eq 0) {
+          $releaseExists = $false
+          $releases = gh release list --limit 100 --json tagName | ConvertFrom-Json
+          foreach ($release in $releases) {
+            if ($release.tagName -eq $env:RELEASE_TAG) {
+              $releaseExists = $true
+              break
+            }
+          }
+          if ($releaseExists) {
             gh release upload $env:RELEASE_TAG auto-install.exe --clobber
           } else {
             gh release create $env:RELEASE_TAG auto-install.exe --title $env:RELEASE_NAME --notes "Automated build for $env:GITHUB_SHA" --prerelease --latest=false --target $env:GITHUB_SHA
