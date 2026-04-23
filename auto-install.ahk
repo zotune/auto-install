@@ -226,15 +226,12 @@ ExeInstallerIs(filePath){
     if !ErrorLevel
     {
         byteRanges := BuildStrings2ByteRanges(SizeBytes)
-        for index, byteRange in byteRanges
-        {
-            rangeScanFailed := false
-            silentArguments := ExeInstallerIsInRange(filePath, byteRange, rangeScanFailed)
-            if (silentArguments != "")
-                return silentArguments
-            if rangeScanFailed
-                break
-        }
+        rangeScanFailed := false
+        silentArguments := ExeInstallerIsInRanges(filePath, byteRanges, rangeScanFailed)
+        if (silentArguments != "")
+            return silentArguments
+        if !rangeScanFailed
+            return ""
     }
     rangeScanFailed := false
     return ExeInstallerIsInRange(filePath, "", rangeScanFailed)
@@ -243,85 +240,213 @@ ExeInstallerIs(filePath){
 BuildStrings2ByteRanges(sizeBytes)
 {
     ranges := []
-    firstChunkEnd := 67108864 ; 64 MB
-    secondChunkEnd := 268435456 ; 256 MB
-    tailChunkSize := 67108864 ; 64 MB
-    overlapBytes := 4096
+    chunkSize := 16777216 ; 16 MB
 
-    if (sizeBytes <= firstChunkEnd)
+    if (sizeBytes <= 0)
         return ranges
 
-    if (sizeBytes < firstChunkEnd)
-        firstChunkEnd := sizeBytes
-    ranges.Push("0:" firstChunkEnd)
+    frontChunkStart := 0
+    backChunkEnd := sizeBytes
 
-    if (sizeBytes > firstChunkEnd)
+    while (frontChunkStart < backChunkEnd)
     {
-        secondChunkStart := firstChunkEnd - overlapBytes
-        if (secondChunkStart < 0)
-            secondChunkStart := 0
-        if (sizeBytes < secondChunkEnd)
-            secondChunkEnd := sizeBytes
-        if (secondChunkEnd > secondChunkStart)
-            ranges.Push(secondChunkStart ":" secondChunkEnd)
-    }
+        frontChunkEnd := frontChunkStart + chunkSize
+        if (frontChunkEnd > backChunkEnd)
+            frontChunkEnd := backChunkEnd
+        ranges.Push(frontChunkStart ":" frontChunkEnd)
+        frontChunkStart := frontChunkEnd
 
-    if (sizeBytes > secondChunkEnd)
-    {
-        tailChunkStart := sizeBytes - tailChunkSize
-        minimumTailStart := secondChunkEnd - overlapBytes
-        if (minimumTailStart < 0)
-            minimumTailStart := 0
-        if (tailChunkStart < minimumTailStart)
-            tailChunkStart := minimumTailStart
-        if (tailChunkStart < 0)
-            tailChunkStart := 0
-        if (sizeBytes > tailChunkStart)
-            ranges.Push(tailChunkStart ":" sizeBytes)
+        if (frontChunkStart >= backChunkEnd)
+            break
+
+        backChunkStart := backChunkEnd - chunkSize
+        if (backChunkStart < frontChunkStart)
+            backChunkStart := frontChunkStart
+        ranges.Push(backChunkStart ":" backChunkEnd)
+        backChunkEnd := backChunkStart
     }
 
     return ranges
 }
 
-ExeInstallerIsInRange(filePath, byteRange, ByRef rangeScanFailed)
+ExeInstallerIsInRanges(filePath, byteRanges, ByRef rangeScanFailed)
+{
+    if !byteRanges.MaxIndex()
+        return ""
+
+    maxWorkers := GetStrings2WorkerCount()
+    rangeCount := byteRanges.MaxIndex()
+    if (maxWorkers > rangeCount)
+        maxWorkers := rangeCount
+    Stdout("Launching " maxWorkers " strings2 workers across " rangeCount " ranges")
+    nextRangeIndex := 1
+    workers := []
+
+    FillStrings2Workers(filePath, byteRanges, workers, nextRangeIndex, maxWorkers)
+
+    while (workers.MaxIndex())
+    {
+        workerIndex := 1
+        while (workerIndex <= workers.MaxIndex())
+        {
+            worker := workers[workerIndex]
+            if IsProcessRunning(worker.pid)
+            {
+                workerIndex += 1
+                continue
+            }
+
+            output := ReadFileIfExists(worker.outputPath)
+            DeleteFileIfExists(worker.outputPath)
+            silentArguments := ReadSilentArgumentsFromOutput(output)
+            if (silentArguments != "")
+            {
+                CloseStrings2Workers(workers)
+                return silentArguments
+            }
+
+            if RangeScanFailedFromOutput(output)
+            {
+                rangeScanFailed := true
+                CloseStrings2Workers(workers)
+                return ""
+            }
+
+            workers.RemoveAt(workerIndex)
+            FillStrings2Workers(filePath, byteRanges, workers, nextRangeIndex, maxWorkers)
+        }
+        Sleep, 50
+    }
+
+    return ""
+}
+
+FillStrings2Workers(filePath, byteRanges, ByRef workers, ByRef nextRangeIndex, maxWorkers)
+{
+    rangeCount := byteRanges.MaxIndex()
+    if !rangeCount
+        return
+
+    while (nextRangeIndex <= rangeCount)
+    {
+        workerCount := workers.MaxIndex()
+        if (workerCount = "")
+            workerCount := 0
+        if (workerCount >= maxWorkers)
+            break
+
+        workers.Push(LaunchStrings2RangeScan(filePath, byteRanges[nextRangeIndex], nextRangeIndex))
+        nextRangeIndex += 1
+    }
+}
+
+GetStrings2WorkerCount()
+{
+    workerCount := A_ProcessorCount
+    if (workerCount = "")
+    {
+        EnvGet, workerCount, NUMBER_OF_PROCESSORS
+    }
+    if (workerCount < 1)
+        return 1
+    return workerCount
+}
+
+LaunchStrings2RangeScan(filePath, byteRange, rangeIndex)
+{
+    outputPath := A_Temp "\auto-install-strings2-" GetCurrentProcess() "-" rangeIndex ".txt"
+    DeleteFileIfExists(outputPath)
+    command := BuildStrings2ShellCommand(filePath, byteRange, outputPath)
+    Run, %command%,, Hide, pid
+    return { pid: pid, outputPath: outputPath }
+}
+
+BuildStrings2ShellCommand(filePath, byteRange, outputPath)
 {
     command := """" A_ScriptDir "\strings2.exe"""
     if (byteRange != "")
         command .= " -b " byteRange
-    command .= " """ filePath """"
+    command .= " """ filePath """ > """ outputPath """ 2>&1"
+    return ComSpec " /c " Chr(34) command Chr(34)
+}
 
-    shell := ComObjCreate("WScript.Shell")
-    exec := shell.Exec(command)
-    while !exec.StdOut.AtEndOfStream
+IsProcessRunning(pid)
+{
+    Process, Exist, %pid%
+    return ErrorLevel = pid
+}
+
+ReadFileIfExists(path)
+{
+    if !FileExist(path)
+        return ""
+    FileRead, output, %path%
+    return output
+}
+
+DeleteFileIfExists(path)
+{
+    if FileExist(path)
+        FileDelete, %path%
+}
+
+RangeScanFailedFromOutput(output)
+{
+    if (output = "")
+        return false
+    StringLower, outputLower, output
+    return InStr(outputLower, "failed to parse -b argument")
+}
+
+ReadSilentArgumentsFromOutput(output)
+{
+    Loop, Parse, output, `n, `r
     {
-        silentArguments := SilentArgumentsFromLine(exec.StdOut.ReadLine())
+        silentArguments := SilentArgumentsFromLine(A_LoopField)
         if (silentArguments != "")
-        {
-            StopStrings2(exec)
             return silentArguments
-        }
     }
+    return ""
+}
 
-    while (exec.Status = 0)
+ExeInstallerIsInRange(filePath, byteRange, ByRef rangeScanFailed)
+{
+    worker := LaunchStrings2RangeScan(filePath, byteRange, "single")
+    while IsProcessRunning(worker.pid)
         Sleep, 50
 
-    if (byteRange != "") and (exec.ExitCode != 0)
+    output := ReadFileIfExists(worker.outputPath)
+    DeleteFileIfExists(worker.outputPath)
+    silentArguments := ReadSilentArgumentsFromOutput(output)
+    if (silentArguments != "")
+        return silentArguments
+
+    if (byteRange != "") and RangeScanFailedFromOutput(output)
         rangeScanFailed := true
 
     return ""
 }
 
-StopStrings2(exec)
+CloseStrings2Workers(workers)
 {
+    for index, worker in workers
+    {
+        StopStrings2(worker.pid)
+        DeleteFileIfExists(worker.outputPath)
+    }
+}
+
+StopStrings2(pid)
+{
+    if (pid = "")
+        return
+    if !IsProcessRunning(pid)
+        return
+
     try
-        exec.Terminate()
+        Process, Close, %pid%
     catch
     {
-        if (exec.ProcessID)
-        {
-            taskKillCommand := ComSpec " /c taskkill /F /PID " exec.ProcessID
-            RunWait, %taskKillCommand%,, Hide
-        }
     }
 }
 
