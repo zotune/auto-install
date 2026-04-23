@@ -222,33 +222,123 @@ RunAsAdmin()
 }
 
 ExeInstallerIs(filePath){
+    FileGetSize, SizeBytes, %filePath%
+    if !ErrorLevel
+    {
+        byteRanges := BuildStrings2ByteRanges(SizeBytes)
+        for index, byteRange in byteRanges
+        {
+            rangeScanFailed := false
+            silentArguments := ExeInstallerIsInRange(filePath, byteRange, rangeScanFailed)
+            if (silentArguments != "")
+                return silentArguments
+            if rangeScanFailed
+                break
+        }
+    }
+    rangeScanFailed := false
+    return ExeInstallerIsInRange(filePath, "", rangeScanFailed)
+}
+
+BuildStrings2ByteRanges(sizeBytes)
+{
+    ranges := []
+    firstChunkEnd := 67108864 ; 64 MB
+    secondChunkEnd := 268435456 ; 256 MB
+    tailChunkSize := 67108864 ; 64 MB
+    overlapBytes := 4096
+
+    if (sizeBytes <= firstChunkEnd)
+        return ranges
+
+    if (sizeBytes < firstChunkEnd)
+        firstChunkEnd := sizeBytes
+    ranges.Push("0:" firstChunkEnd)
+
+    if (sizeBytes > firstChunkEnd)
+    {
+        secondChunkStart := firstChunkEnd - overlapBytes
+        if (secondChunkStart < 0)
+            secondChunkStart := 0
+        if (sizeBytes < secondChunkEnd)
+            secondChunkEnd := sizeBytes
+        if (secondChunkEnd > secondChunkStart)
+            ranges.Push(secondChunkStart ":" secondChunkEnd)
+    }
+
+    if (sizeBytes > secondChunkEnd)
+    {
+        tailChunkStart := sizeBytes - tailChunkSize
+        minimumTailStart := secondChunkEnd - overlapBytes
+        if (minimumTailStart < 0)
+            minimumTailStart := 0
+        if (tailChunkStart < minimumTailStart)
+            tailChunkStart := minimumTailStart
+        if (tailChunkStart < 0)
+            tailChunkStart := 0
+        if (sizeBytes > tailChunkStart)
+            ranges.Push(tailChunkStart ":" sizeBytes)
+    }
+
+    return ranges
+}
+
+ExeInstallerIsInRange(filePath, byteRange, ByRef rangeScanFailed)
+{
+    command := """" A_ScriptDir "\strings2.exe"""
+    if (byteRange != "")
+        command .= " -b " byteRange
+    command .= " """ filePath """"
+
     shell := ComObjCreate("WScript.Shell")
-    exec := shell.Exec("""" A_ScriptDir "\strings2.exe"" """ filePath """")
+    exec := shell.Exec(command)
     while !exec.StdOut.AtEndOfStream
     {
         silentArguments := SilentArgumentsFromLine(exec.StdOut.ReadLine())
         if (silentArguments != "")
         {
-            exec.Terminate()
+            StopStrings2(exec)
             return silentArguments
         }
     }
+
+    while (exec.Status = 0)
+        Sleep, 50
+
+    if (byteRange != "") and (exec.ExitCode != 0)
+        rangeScanFailed := true
+
     return ""
+}
+
+StopStrings2(exec)
+{
+    try
+        exec.Terminate()
+    catch
+    {
+        if (exec.ProcessID)
+        {
+            taskKillCommand := ComSpec " /c taskkill /F /PID " exec.ProcessID
+            RunWait, %taskKillCommand%,, Hide
+        }
+    }
 }
 
 SilentArgumentsFromLine(line)
 {
-    if ((InStr(line,"nsis")=1) or (InStr(line,"nullsoft")=1))
+    StringLower, lineLower, line
+    if (InStr(lineLower,"nsis") or InStr(lineLower,"nullsoft"))
         Return "/S" ;NSIS
-    else if ((InStr(line,"inno")=1) and !(InStr(line,"< window")=1))
+    else if (InStr(lineLower,"inno") and !InStr(lineLower,"< window"))
         Return "/TYPE=FULL /VERYSILENT /SUPPRESSMSGBOXES /NORESTART" ;InnoSetup
-    else if (InStr(line,"InstallAware")=1)
+    else if (InStr(lineLower,"installaware"))
         Return "/s" ;InstallAware
-    else if (InStr(line,"installshield")=1)
+    else if (InStr(lineLower,"installshield"))
         Return "/s" ;InstallShield
-    else if (InStr(line,"7-Zip 7zS.sfx.exe")=1)
+    else if (InStr(lineLower,"7-zip 7zs.sfx.exe"))
         Return "-gm2" ;Gnu SelfExtracting 7z Archive
-    else if (InStr(line,"RarSfx WinRAR")=1)
+    else if (InStr(lineLower,"rarsfx winrar"))
         Return "-s" ;WinRAR Self Extracting Archive
     return ""
 }
