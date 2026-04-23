@@ -452,18 +452,17 @@ StopStrings2(pid)
 
 SilentArgumentsFromLine(line)
 {
-    StringLower, lineLower, line
-    if (InStr(lineLower,"nsis") or InStr(lineLower,"nullsoft"))
+    if ((InStr(line,"nsis")=1) or (InStr(line,"nullsoft")=1))
         Return "/S" ;NSIS
-    else if (InStr(lineLower,"inno") and !InStr(lineLower,"< window"))
+    else if ((InStr(line,"inno")=1) and !(InStr(line,"< window")=1))
         Return "/TYPE=FULL /VERYSILENT /SUPPRESSMSGBOXES /NORESTART" ;InnoSetup
-    else if (InStr(lineLower,"installaware"))
+    else if (InStr(line,"InstallAware")=1)
         Return "/s" ;InstallAware
-    else if (InStr(lineLower,"installshield"))
+    else if (InStr(line,"installshield")=1)
         Return "/s" ;InstallShield
-    else if (InStr(lineLower,"7-zip 7zs.sfx.exe"))
+    else if (InStr(line,"7-Zip 7zS.sfx.exe")=1)
         Return "-gm2" ;Gnu SelfExtracting 7z Archive
-    else if (InStr(lineLower,"rarsfx winrar"))
+    else if (InStr(line,"RarSfx WinRAR")=1)
         Return "-s" ;WinRAR Self Extracting Archive
     return ""
 }
