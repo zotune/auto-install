@@ -69,8 +69,7 @@ DetectFile(Directory, Changes) {
         if (Extension = "exe"){
             Stdout("`n[=== """ Name """ ===]")
             Stdout("Scanning for silent install switches")
-            if ShouldHashFile(Path)
-                RunWait, CertUtil -hashfile "%Path%" SHA256
+            RunWait, CertUtil -hashfile "%Path%" SHA256
             ProductName := FileGetVersionInfo_AW(Path,"ProductName")
             if (InStr(ProductName,"NVIDIA Package")=1)
                 SilentArguments := "-s"
@@ -161,14 +160,6 @@ IsLocked(Path)
         Return 0, File.Close() ;unlocked
     else
         Return 1 ;locked
-}
-
-ShouldHashFile(Path)
-{
-    FileGetSize, SizeBytes, %Path%
-    if ErrorLevel
-        return false
-    return SizeBytes <= 104857600 ; 100 MB
 }
 
 NameWithoutVersion(Name)
