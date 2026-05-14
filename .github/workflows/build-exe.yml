@@ -78,8 +78,14 @@ jobs:
           git tag --force $env:RELEASE_TAG $env:GITHUB_SHA
           git push --force origin "refs/tags/$env:RELEASE_TAG"
 
-          gh release view $env:RELEASE_TAG *> $null
-          $releaseExists = $LASTEXITCODE -eq 0
+          $releaseExists = $false
+          $releases = gh release list --limit 100 --json tagName | ConvertFrom-Json
+          foreach ($release in $releases) {
+            if ($release.tagName -eq $env:RELEASE_TAG) {
+              $releaseExists = $true
+              break
+            }
+          }
 
           if ($releaseExists) {
             gh release upload $env:RELEASE_TAG dist\auto-install.exe --clobber
