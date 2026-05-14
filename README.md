@@ -8,10 +8,9 @@
 * Auto-detect installer type and run `.exe` installers silently (currently supports [NSIS](https://nsis.sourceforge.io/Main_Page), [Inno Setup](https://jrsoftware.org/isinfo.php), [InstallAware](https://www.installaware.com/) and [InstallShield](https://www.revenera.com/install/products/installshield) installers)
 
 # How to use
-* Install latest [AutoHotkey_1.1.x.x_setup.exe](https://www.autohotkey.com/download/1.1/?C=M;O=D) using installer (v2 is not supported)
 * Install [7-Zip 64-bit](https://www.7-zip.org/) using installer
-* Download and unpack [auto-install](https://codeload.github.com/zotune/auto-install/zip/refs/heads/main)
-* Run `auto-install.ahk` (or run `auto-install.exe.ahk` and then `auto-install.exe`)
+* Either download `auto-install.exe` from [Releases](https://github.com/zotune/auto-install/releases) and run it
+* Or install latest [AutoHotkey_1.1.x.x_setup.exe](https://www.autohotkey.com/download/1.1/?C=M;O=D) using installer (v2 is not supported), download and unpack the [source code](https://codeload.github.com/zotune/auto-install/zip/refs/heads/main), then run `auto-install.ahk` or run `auto-install.exe.ahk` to compile `auto-install.exe`
 * Open folder `%UserProfile%\Downloads`
 * Put installers/archives in the **Downloads** folder, they should automatically unpack and install
 
@@ -53,7 +52,9 @@ Create an [issue](https://github.com/zotune/auto-install/issues). Describe the p
 
 ## Is there a standalone binary `auto-install.exe` I can use?
 
-Yes. Simply run `auto-install.exe.ahk` and `AutoHotkey` should create a standalone compiled version for you in the same folder
+Yes. Download `auto-install.exe` from [Releases](https://github.com/zotune/auto-install/releases). GitHub Actions compiles it from `auto-install.ahk`.
+
+If you want to build it locally, run `auto-install.exe.ahk` and AutoHotkey should create a standalone compiled version for you in the same folder.
 
 _protip: this will have proper taskbar icon, and you can pin it to the taskbar_
 

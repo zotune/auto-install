@@ -26,6 +26,7 @@ jobs:
       - name: Compile auto-install.exe
         shell: powershell
         run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
           $compiler = Join-Path $env:ProgramFiles 'AutoHotkey\Compiler\Ahk2Exe.exe'
           if (!(Test-Path $compiler)) {
             $compiler = Join-Path ${env:ProgramFiles(x86)} 'AutoHotkey\Compiler\Ahk2Exe.exe'
@@ -33,7 +34,11 @@ jobs:
           if (!(Test-Path $compiler)) {
             throw 'Ahk2Exe.exe not found after AutoHotkey installation.'
           }
-          & $compiler /in auto-install.ahk /icon app.ico
+          & $compiler /in auto-install.ahk /out dist\auto-install.exe /icon app.ico
+          if (!(Test-Path dist\auto-install.exe)) {
+            throw 'Compilation finished without creating dist\auto-install.exe.'
+          }
+          Get-Item dist\auto-install.exe
 
       - name: Compute release name
         if: github.ref == 'refs/heads/main'
@@ -46,8 +51,8 @@ jobs:
       - name: Upload auto-install.exe
         uses: actions/upload-artifact@v4
         with:
-          name: auto-install-exe
-          path: auto-install.exe
+          name: auto-install.exe
+          path: dist/auto-install.exe
           retention-days: 7
 
       - name: Publish to GitHub Releases
@@ -56,16 +61,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $releaseExists = $false
-          $releases = gh release list --limit 100 --json tagName | ConvertFrom-Json
-          foreach ($release in $releases) {
-            if ($release.tagName -eq $env:RELEASE_TAG) {
-              $releaseExists = $true
-              break
-            }
-          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag --force $env:RELEASE_TAG $env:GITHUB_SHA
+          git push --force origin "refs/tags/$env:RELEASE_TAG"
+
+          gh release view $env:RELEASE_TAG *> $null
+          $releaseExists = $LASTEXITCODE -eq 0
+
           if ($releaseExists) {
-            gh release upload $env:RELEASE_TAG auto-install.exe --clobber
+            gh release upload $env:RELEASE_TAG dist\auto-install.exe --clobber
+            gh release edit $env:RELEASE_TAG --title $env:RELEASE_NAME --notes "Automated build for $env:GITHUB_SHA" --prerelease --latest=false
           } else {
-            gh release create $env:RELEASE_TAG auto-install.exe --title $env:RELEASE_NAME --notes "Automated build for $env:GITHUB_SHA" --prerelease --latest=false --target $env:GITHUB_SHA
+            gh release create $env:RELEASE_TAG dist\auto-install.exe --title $env:RELEASE_NAME --notes "Automated build for $env:GITHUB_SHA" --prerelease --latest=false --target $env:GITHUB_SHA
           }
