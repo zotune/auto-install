@@ -34,11 +34,23 @@ jobs:
           if (!(Test-Path $compiler)) {
             throw 'Ahk2Exe.exe not found after AutoHotkey installation.'
           }
-          & $compiler /in auto-install.ahk /out dist\auto-install.exe /icon app.ico
-          if (!(Test-Path dist\auto-install.exe)) {
+          $output = Join-Path $PWD 'dist\auto-install.exe'
+          $arguments = @(
+            '/in', (Join-Path $PWD 'auto-install.ahk'),
+            '/out', $output,
+            '/icon', (Join-Path $PWD 'app.ico')
+          )
+          $process = Start-Process -FilePath $compiler -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "Ahk2Exe failed with exit code $($process.ExitCode)."
+          }
+          for ($i = 0; $i -lt 30 -and !(Test-Path $output); $i++) {
+            Start-Sleep -Seconds 1
+          }
+          if (!(Test-Path $output)) {
             throw 'Compilation finished without creating dist\auto-install.exe.'
           }
-          Get-Item dist\auto-install.exe
+          Get-Item $output
 
       - name: Compute release name
         if: github.ref == 'refs/heads/main'
